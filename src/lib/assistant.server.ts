@@ -12,26 +12,26 @@ function buildMessages(data: AssistantInput) {
 
   if (data.mode === "email") {
     return buildEmailPrompt({
-      purpose: clip(f.purpose),
-      recipient: clip(f.recipient),
-      tone: clip(f.tone) || "professional and warm",
-      keyPoints: clip(f.keyPoints),
-      length: clip(f.length) || "short (under 180 words)",
+      purpose: clip(f['purpose']),
+      recipient: clip(f['recipient']),
+      tone: clip(f['tone']) || "professional and warm",
+      keyPoints: clip(f['keyPoints']),
+      length: clip(f['length']) || "short (under 180 words)",
     });
   }
 
   if (data.mode === "meeting") {
     return buildMeetingPrompt({
-      notes: clip(f.notes),
-      context: clip(f.context),
+      notes: clip(f['notes']),
+      context: clip(f['context']),
     });
   }
 
   return buildTaskPrompt({
-    goal: clip(f.goal),
-    deadline: clip(f.deadline),
-    capacity: clip(f.capacity),
-    constraints: clip(f.constraints),
+    goal: clip(f['goal']),
+    deadline: clip(f['deadline']),
+    capacity: clip(f['capacity']),
+    constraints: clip(f['constraints']),
   });
 }
 
