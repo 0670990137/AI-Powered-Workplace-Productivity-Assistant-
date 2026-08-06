@@ -1,6 +1,6 @@
 # AI Workflow Assistant
 
-You are required to build a practical AI solution that enhances productivity by automating common workplace tasks. The solution must: • Address a real-world business or professional use case • Utilize AI tools effectively (e.g., ChatGPT, Gemini, Notion AI, lovable.ai, etc.) • Demonstrate strong prompt engineering techniques • Apply ethical and responsible AI practices • Clearly show productivity improvement and value
+I am required to build a practical AI solution that enhances productivity by automating common workplace tasks. The solution must: • Address a real-world business or professional use case • Utilize AI tools effectively (e.g., ChatGPT, Gemini, Notion AI, lovable.ai, etc.) • Demonstrate strong prompt engineering techniques • Apply ethical and responsible AI practices • Clearly show productivity improvement and value
 
 This project was built with [Lovable](https://lovable.dev).
 
