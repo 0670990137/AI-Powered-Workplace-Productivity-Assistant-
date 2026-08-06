@@ -118,6 +118,7 @@ ${input.notes}
 
 export type TaskInput = {
   goal: string;
+  horizon: string;
   deadline: string;
   capacity: string;
   constraints: string;
@@ -130,16 +131,21 @@ export function buildTaskPrompt(input: TaskInput) {
 ${RESPONSIBLE_AI_RULES}
 - Estimates are estimates: label them as such and never present them as guarantees.
 
+PRIORITISATION METHOD: score every task on urgency (deadline pressure) and importance (impact on the objective), then map it to one quadrant: DO FIRST (urgent + important), SCHEDULE (important, not urgent), DELEGATE (urgent, not important), DROP OR DEFER (neither).
+
 OUTPUT CONTRACT - reply with exactly these sections, in this order, with these exact headers:
 
 OBJECTIVE
 <one sentence restating the goal as a measurable outcome>
 
 PLAN
-<numbered lines in the exact format: "1. <task> | Priority: High|Medium|Low | Est: <hours or days> | Depends on: <task number or none>">
+<numbered lines in the exact format: "1. <task> | Priority: High|Medium|Low | Quadrant: Do first|Schedule|Delegate|Defer | Est: <hours or days> | Depends on: <task number or none>">
 
-SUGGESTED SEQUENCE
-<lines starting with "- " grouping tasks into phases or days that fit the stated capacity>
+SCHEDULE
+<a concrete calendar-style breakdown that matches the requested planning horizon. For a daily plan use time blocks ("- 09:00-10:30 | <task> | Deep focus"). For a weekly plan use one line per day ("- Monday | <tasks> | ~<hours>"). Never exceed the stated capacity per day.>
+
+TIME OPTIMISATION
+<lines starting with "- " with specific tactics for this plan: batching similar work, protecting one deep-focus block, what to timebox, what to delegate or automate, and which task to cut first if time runs short>
 
 RISKS
 <lines starting with "- " with a mitigation for each>
@@ -149,10 +155,12 @@ NEEDS CONFIRMATION
     prompt: `Build an execution plan.
 
 Goal: ${input.goal}
+Planning horizon: ${input.horizon || "weekly plan"}
 Deadline: ${input.deadline || "not specified"}
 Available capacity: ${input.capacity || "not specified"}
 Constraints, dependencies or people involved: ${input.constraints || "none supplied"}
 
-Rules for this task: produce between 5 and 12 tasks, each small enough to finish in one sitting, ordered so that blockers come first. If the deadline is not realistic for the stated capacity, say so explicitly in RISKS.`,
+Rules for this task: produce between 5 and 12 tasks, each small enough to finish in one sitting, ordered so that blockers come first. The SCHEDULE section must fit the planning horizon and the stated capacity exactly. If the deadline is not realistic for the stated capacity, say so explicitly in RISKS.`,
   };
 }
+
