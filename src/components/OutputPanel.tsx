@@ -44,8 +44,8 @@ function parseSections(text: string): Section[] {
 
 function trimBlank(lines: string[]) {
   const copy = [...lines];
-  while (copy.length && !copy[0].trim()) copy.shift();
-  while (copy.length && !copy[copy.length - 1].trim()) copy.pop();
+  while (copy.length && !copy[0]?.trim()) copy.shift();
+  while (copy.length && !copy[copy.length - 1]?.trim()) copy.pop();
   return copy;
 }
 
