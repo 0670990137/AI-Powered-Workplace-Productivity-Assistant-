@@ -68,19 +68,35 @@ const TOOLS: Tool[] = [
       },
       { name: "recipient", label: "Recipient", placeholder: "Account manager at our print supplier" },
       {
+        name: "audience",
+        label: "Audience type",
+        type: "select",
+        placeholder: "",
+        hint: "Changes vocabulary, formality and how the ask is framed.",
+        options: [
+          "Client",
+          "Manager",
+          "Team / colleague",
+          "Vendor / supplier",
+          "External stakeholder / partner",
+        ],
+      },
+      {
         name: "tone",
         label: "Tone",
         type: "select",
         placeholder: "",
         options: [
+          "formal",
+          "informal",
+          "persuasive",
           "professional and warm",
           "direct and brief",
-          "formal",
-          "friendly and casual",
           "firm but polite (escalation)",
           "apologetic",
         ],
       },
+
       {
         name: "length",
         label: "Length",
