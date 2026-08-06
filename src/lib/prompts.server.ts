@@ -22,16 +22,28 @@ RESPONSIBLE AI RULES (non-negotiable, apply to every response):
 export type EmailInput = {
   purpose: string;
   recipient: string;
+  audience: string;
   tone: string;
   keyPoints: string;
   length: string;
 };
+
+const AUDIENCE_GUIDE = `AUDIENCE ADAPTATION - adapt vocabulary, formality, level of detail and framing of the ask:
+- Client: outcome-focused, no internal jargon, reassure on delivery and cost, never blame colleagues.
+- Manager: lead with the decision or ask, give a one-line status, keep detail in a short list, make escalation explicit.
+- Team / colleague: collaborative and concrete, name the shared goal, spell out who does what next.
+- Vendor / supplier: contractual and specific, reference figures, quantities and dates, state the required response date.
+- External stakeholder / partner: neutral and diplomatic, minimal internal detail, clear single next step.`;
 
 export function buildEmailPrompt(input: EmailInput) {
   return {
     system: `You are an executive communications specialist who has drafted professional correspondence for 15 years. You write emails that are clear, courteous and action-oriented.
 
 ${RESPONSIBLE_AI_RULES}
+
+${AUDIENCE_GUIDE}
+
+TONE: match the requested tone exactly. Formal means no contractions and full titles; informal means contractions and short sentences; persuasive means benefit-led framing with a confident, non-manipulative ask.
 
 OUTPUT CONTRACT - reply with exactly these sections, in this order, with these exact headers:
 
@@ -42,13 +54,14 @@ EMAIL
 <the full email body, starting with a greeting and ending with a sign-off placeholder "[Your name]">
 
 WHY THIS WORKS
-<2 to 3 short lines explaining the structural choices you made>
+<2 to 3 short lines explaining the structural choices you made, including how you adapted to the audience and tone>
 
 NEEDS CONFIRMATION
 <bullet lines starting with "- " for every fact, date, price or name the sender must verify before sending. Write "- Nothing outstanding." if there is genuinely nothing.>`,
     prompt: `Draft an email.
 
-Audience / recipient: ${input.recipient || "not specified"}
+Audience type: ${input.audience || "not specified"}
+Specific recipient: ${input.recipient || "not specified"}
 Purpose: ${input.purpose}
 Desired tone: ${input.tone}
 Target length: ${input.length}
@@ -59,6 +72,7 @@ ${input.keyPoints || "none supplied - work only from the purpose above"}
 Rules for this task: one idea per paragraph, put the ask in the first or second paragraph, and close with a single explicit next step.`,
   };
 }
+
 
 export type MeetingInput = {
   notes: string;
