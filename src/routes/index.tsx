@@ -122,11 +122,13 @@ const TOOLS: Tool[] = [
       purpose:
         "Ask the print supplier for a revised quote within budget and confirm a new delivery date",
       recipient: "Account manager at our print supplier",
-      tone: "firm but polite (escalation)",
+      audience: "Vendor / supplier",
+      tone: "persuasive",
       length: "short (under 180 words)",
       keyPoints:
         "- Original quote was R48 000, our approved cap is R42 000\n- We need 2 500 booklets, not 3 000\n- Delivery must land before the 18th\n- Ask for a revised quote by Friday",
     },
+
   },
   {
     id: "meeting",
@@ -167,7 +169,7 @@ open question: who owns the returns portal comms?`,
   {
     id: "task",
     name: "Task planner",
-    tagline: "Vague goal into a sequenced plan",
+    tagline: "Prioritised daily or weekly schedule",
     icon: ListChecks,
     saves: "~30 min per plan",
     required: "goal",
@@ -178,6 +180,14 @@ open question: who owns the returns portal comms?`,
         placeholder: "Launch the new onboarding flow for enterprise customers",
         type: "textarea",
         rows: 3,
+      },
+      {
+        name: "horizon",
+        label: "Planning horizon",
+        type: "select",
+        placeholder: "",
+        hint: "Daily returns time blocks; weekly returns a day-by-day schedule.",
+        options: ["daily plan (time-blocked)", "weekly plan", "two-week plan"],
       },
       { name: "deadline", label: "Deadline", placeholder: "Friday 21st, end of day" },
       { name: "capacity", label: "Capacity available", placeholder: "Me plus one designer, ~4 hours a day" },
@@ -191,12 +201,14 @@ open question: who owns the returns portal comms?`,
     ],
     example: {
       goal: "Run a company-wide security awareness training and prove completion for the audit",
+      horizon: "weekly plan",
       deadline: "In three weeks, before the audit on the 30th",
       capacity: "Just me, about 5 hours a week, plus HR for scheduling",
       constraints:
         "Training content must be approved by legal; 120 staff across 3 offices; audit needs signed attendance records",
     },
   },
+
 ];
 
 function Index() {
