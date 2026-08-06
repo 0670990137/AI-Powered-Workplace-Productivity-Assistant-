@@ -22,16 +22,28 @@ RESPONSIBLE AI RULES (non-negotiable, apply to every response):
 export type EmailInput = {
   purpose: string;
   recipient: string;
+  audience: string;
   tone: string;
   keyPoints: string;
   length: string;
 };
+
+const AUDIENCE_GUIDE = `AUDIENCE ADAPTATION - adapt vocabulary, formality, level of detail and framing of the ask:
+- Client: outcome-focused, no internal jargon, reassure on delivery and cost, never blame colleagues.
+- Manager: lead with the decision or ask, give a one-line status, keep detail in a short list, make escalation explicit.
+- Team / colleague: collaborative and concrete, name the shared goal, spell out who does what next.
+- Vendor / supplier: contractual and specific, reference figures, quantities and dates, state the required response date.
+- External stakeholder / partner: neutral and diplomatic, minimal internal detail, clear single next step.`;
 
 export function buildEmailPrompt(input: EmailInput) {
   return {
     system: `You are an executive communications specialist who has drafted professional correspondence for 15 years. You write emails that are clear, courteous and action-oriented.
 
 ${RESPONSIBLE_AI_RULES}
+
+${AUDIENCE_GUIDE}
+
+TONE: match the requested tone exactly. Formal means no contractions and full titles; informal means contractions and short sentences; persuasive means benefit-led framing with a confident, non-manipulative ask.
 
 OUTPUT CONTRACT - reply with exactly these sections, in this order, with these exact headers:
 
@@ -42,13 +54,14 @@ EMAIL
 <the full email body, starting with a greeting and ending with a sign-off placeholder "[Your name]">
 
 WHY THIS WORKS
-<2 to 3 short lines explaining the structural choices you made>
+<2 to 3 short lines explaining the structural choices you made, including how you adapted to the audience and tone>
 
 NEEDS CONFIRMATION
 <bullet lines starting with "- " for every fact, date, price or name the sender must verify before sending. Write "- Nothing outstanding." if there is genuinely nothing.>`,
     prompt: `Draft an email.
 
-Audience / recipient: ${input.recipient || "not specified"}
+Audience type: ${input.audience || "not specified"}
+Specific recipient: ${input.recipient || "not specified"}
 Purpose: ${input.purpose}
 Desired tone: ${input.tone}
 Target length: ${input.length}
@@ -59,6 +72,7 @@ ${input.keyPoints || "none supplied - work only from the purpose above"}
 Rules for this task: one idea per paragraph, put the ask in the first or second paragraph, and close with a single explicit next step.`,
   };
 }
+
 
 export type MeetingInput = {
   notes: string;
@@ -104,6 +118,7 @@ ${input.notes}
 
 export type TaskInput = {
   goal: string;
+  horizon: string;
   deadline: string;
   capacity: string;
   constraints: string;
@@ -116,16 +131,21 @@ export function buildTaskPrompt(input: TaskInput) {
 ${RESPONSIBLE_AI_RULES}
 - Estimates are estimates: label them as such and never present them as guarantees.
 
+PRIORITISATION METHOD: score every task on urgency (deadline pressure) and importance (impact on the objective), then map it to one quadrant: DO FIRST (urgent + important), SCHEDULE (important, not urgent), DELEGATE (urgent, not important), DROP OR DEFER (neither).
+
 OUTPUT CONTRACT - reply with exactly these sections, in this order, with these exact headers:
 
 OBJECTIVE
 <one sentence restating the goal as a measurable outcome>
 
 PLAN
-<numbered lines in the exact format: "1. <task> | Priority: High|Medium|Low | Est: <hours or days> | Depends on: <task number or none>">
+<numbered lines in the exact format: "1. <task> | Priority: High|Medium|Low | Quadrant: Do first|Schedule|Delegate|Defer | Est: <hours or days> | Depends on: <task number or none>">
 
-SUGGESTED SEQUENCE
-<lines starting with "- " grouping tasks into phases or days that fit the stated capacity>
+SCHEDULE
+<a concrete calendar-style breakdown that matches the requested planning horizon. For a daily plan use time blocks ("- 09:00-10:30 | <task> | Deep focus"). For a weekly plan use one line per day ("- Monday | <tasks> | ~<hours>"). Never exceed the stated capacity per day.>
+
+TIME OPTIMISATION
+<lines starting with "- " with specific tactics for this plan: batching similar work, protecting one deep-focus block, what to timebox, what to delegate or automate, and which task to cut first if time runs short>
 
 RISKS
 <lines starting with "- " with a mitigation for each>
@@ -135,10 +155,12 @@ NEEDS CONFIRMATION
     prompt: `Build an execution plan.
 
 Goal: ${input.goal}
+Planning horizon: ${input.horizon || "weekly plan"}
 Deadline: ${input.deadline || "not specified"}
 Available capacity: ${input.capacity || "not specified"}
 Constraints, dependencies or people involved: ${input.constraints || "none supplied"}
 
-Rules for this task: produce between 5 and 12 tasks, each small enough to finish in one sitting, ordered so that blockers come first. If the deadline is not realistic for the stated capacity, say so explicitly in RISKS.`,
+Rules for this task: produce between 5 and 12 tasks, each small enough to finish in one sitting, ordered so that blockers come first. The SCHEDULE section must fit the planning horizon and the stated capacity exactly. If the deadline is not realistic for the stated capacity, say so explicitly in RISKS.`,
   };
 }
+

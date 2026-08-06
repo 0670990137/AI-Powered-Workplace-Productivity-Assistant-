@@ -14,6 +14,7 @@ function buildMessages(data: AssistantInput) {
     return buildEmailPrompt({
       purpose: clip(f['purpose']),
       recipient: clip(f['recipient']),
+      audience: clip(f['audience']) || "not specified",
       tone: clip(f['tone']) || "professional and warm",
       keyPoints: clip(f['keyPoints']),
       length: clip(f['length']) || "short (under 180 words)",
@@ -29,6 +30,7 @@ function buildMessages(data: AssistantInput) {
 
   return buildTaskPrompt({
     goal: clip(f['goal']),
+    horizon: clip(f['horizon']) || "weekly plan",
     deadline: clip(f['deadline']),
     capacity: clip(f['capacity']),
     constraints: clip(f['constraints']),
